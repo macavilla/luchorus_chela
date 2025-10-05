@@ -12,6 +12,17 @@ export default function HydraCanvas({ width = 800, height = 600, initModule }) {
         window.global = window;
       }
 
+      const canvas = canvasRef.current;
+      const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+
+      resizeCanvas(); // Ajusta al cargar
+
+      // Vuelve a ajustar en resize
+      window.addEventListener("resize", resizeCanvas);
+
       // Importar hydra-synth dinámicamente (solo en cliente)
       const { default: Hydra } = await import("hydra-synth");
 
@@ -38,8 +49,19 @@ export default function HydraCanvas({ width = 800, height = 600, initModule }) {
         // Patch de fallback (básico)
         osc(10, 0.1, 1.2).kaleid(4).out();
       }
+
+      // Cleanup
+      return () => {
+        window.removeEventListener("resize", resizeCanvas);
+      };
     })();
   }, [initModule]);
 
-  return <canvas ref={canvasRef} width={width} height={height} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      width={canvasRef.current ? canvasRef.current.width : width}
+      height={canvasRef.current ? canvasRef.current.height : height}
+    />
+  );
 }
