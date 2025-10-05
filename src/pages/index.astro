@@ -1,0 +1,22 @@
+---
+import HydraCanvas from "../components/HydraCanvas";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <HydraCanvas client:only="react" initModule="/src/lib/hydra-patches.js" />
+    <!-- <HydraCanvas
+      client:only="react"
+      init={(hydra: any) => {
+        hydra.osc(10, 0.1, 1.2).kaleid(4).out();
+      }}
+    /> -->
+  </body>
+</html>
