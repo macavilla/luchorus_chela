@@ -2,6 +2,20 @@
 
 Astro + hydra-synth + sonido
 
+🌀 HydraCanvas.jsx
+
+Este componente encapsula la inicialización y renderizado de Hydra-synth. crea una instancia de Hydra vinculada a un `<canvas>` y ejecuta un patch visual definido en `lib/hydra-patches.js`.
+
+El flow es:
+
+- Se referencia el canvas con useRef.
+- En useEffect, se importa Hydra de forma dinámica (solo en el cliente, para evitar errores SSR).
+- Se crea una nueva instancia new Hydra({ canvas, detectAudio: false }).
+- Se aplica un patch de prueba (por ejemplo, osc().kaleid(4).out()).
+- Al desmontarse el componente, se limpian los recursos.
+
+---
+
 ## Astro Starter Kit: Minimal
 
 ```sh
