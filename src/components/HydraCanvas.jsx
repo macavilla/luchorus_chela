@@ -1,67 +1,47 @@
 import { useEffect, useRef } from "react";
+// 🔹 Importás el patch estáticamente: Astro y Vite lo incluyen en el bundle final
+import { initHydra } from "../lib/hydra-patches";
 
-export default function HydraCanvas({ width = 800, height = 600, initModule }) {
+export default function HydraCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    // ✅ Evita ejecutar en el servidor
+    if (typeof window === "undefined") return;
 
-    (async () => {
-      // Polyfill para hydra-synth en el browser
-      if (typeof global === "undefined") {
-        window.global = window;
-      }
+    // 🩹 Polyfill para Hydra (usa 'global' internamente)
+    if (typeof global === "undefined") {
+      window.global = window;
+    }
 
-      const canvas = canvasRef.current;
-      const resizeCanvas = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      };
+    const canvas = canvasRef.current;
 
-      resizeCanvas(); // Ajusta al cargar
+    // Ajusta tamaño al viewport
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-      // Vuelve a ajustar en resize
-      window.addEventListener("resize", resizeCanvas);
+    // Inicializa Hydra (desde tu módulo)
+    initHydra(canvas);
 
-      // Importar hydra-synth dinámicamente (solo en cliente)
-      const { default: Hydra } = await import("hydra-synth");
-
-      // Crear instancia con makeGlobal: true para tener osc(), shape(), etc.
-      const hydra = new Hydra({
-        canvas: canvasRef.current,
-        detectAudio: false,
-        makeGlobal: true, // 👈 importante
-      });
-
-      if (initModule) {
-        try {
-          const patchMod = await import(initModule);
-          const initFn = patchMod.default ?? patchMod;
-          if (typeof initFn === "function") {
-            initFn(hydra);
-          } else {
-            console.warn("initModule no exportó una función válida");
-          }
-        } catch (err) {
-          console.error("Error importando initModule:", err);
-        }
-      } else {
-        // Patch de fallback (básico)
-        osc(10, 0.1, 1.2).kaleid(4).out();
-      }
-
-      // Cleanup
-      return () => {
-        window.removeEventListener("resize", resizeCanvas);
-      };
-    })();
-  }, [initModule]);
+    // Limpieza
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      width={canvasRef.current ? canvasRef.current.width : width}
-      height={canvasRef.current ? canvasRef.current.height : height}
+      style={{
+        display: "block",
+        width: "100vw",
+        height: "100vh",
+        objectFit: "cover",
+      }}
     />
   );
 }

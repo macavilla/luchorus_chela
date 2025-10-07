@@ -11,12 +11,6 @@ import HydraCanvas from "../components/HydraCanvas";
     <title>Boceto: hydra + p5</title>
   </head>
   <body>
-    <HydraCanvas client:only="react" initModule="/src/lib/hydra-patches.js" />
-    <!-- <HydraCanvas
-      client:only="react"
-      init={(hydra: any) => {
-        hydra.osc(10, 0.1, 1.2).kaleid(4).out();
-      }}
-    /> -->
+    <HydraCanvas client:only="react" />
   </body>
 </html>

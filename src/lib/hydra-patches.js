@@ -1,4 +1,16 @@
-export default function initHydra() {
-  // usamos las funciones globales inyectadas por Hydra
-  osc(10, -0.1, 0.5).posterize(10).kaleid(12).pixelate(120, 120).out();
+import Hydra from "hydra-synth";
+
+export function initHydra(canvas) {
+  if (!canvas) return;
+
+  const hydra = new Hydra({
+    canvas,
+    detectAudio: false,
+    makeGlobal: true,
+  });
+
+  // Patch de prueba
+  osc(10, 0.1, 1.2).kaleid(4).out();
+
+  return hydra;
 }
