@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-// 🔹 Importás el patch estáticamente: Astro y Vite lo incluyen en el bundle final
+
 import { initHydra } from "../lib/hydra-patches";
 
 export default function HydraCanvas() {
@@ -24,7 +24,7 @@ export default function HydraCanvas() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Inicializa Hydra (desde tu módulo)
+    // Inicializa Hydra
     initHydra(canvas);
 
     // Limpieza
