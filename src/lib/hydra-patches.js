@@ -10,7 +10,12 @@ export function initHydra(canvas) {
   });
 
   // Patch de prueba
-  osc(10, 0.1, 1.2).kaleid(4).out();
+  osc(10, 0.1, 0.12)
+    .rotate(0, 0.1)
+    .posterize()
+    .kaleid(18)
+    .scale(1, 1, window.innerWidth / window.innerHeight)
+    .out();
 
   return hydra;
 }
