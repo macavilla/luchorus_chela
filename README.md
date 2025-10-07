@@ -1,8 +1,28 @@
 # luchorus_chela
 
-Astro + hydra-synth + sonido
+Astro + react + hydra-synth + sonido
 
-🌀 HydraCanvas.jsx
+[wORK IN PROGRESSSSS](https://macavilla.github.io/luchorus_chela/)
+
+## Correr localmente
+
+Clonar [el repo de github](https://github.com/macavilla/luchorus_chela) y dentro del mismo correr los siguientes comandos:
+
+instalar las dependencias:
+
+```
+npm install
+```
+
+levantar el servidor local:
+
+```
+npm run dev
+```
+
+podrá verse corriendo en http://localhost:4321/
+
+## 🌀 HydraCanvas.jsx
 
 Este componente encapsula la inicialización y renderizado de Hydra-synth. crea una instancia de Hydra vinculada a un `<canvas>` y ejecuta un patch visual definido en `lib/hydra-patches.js`.
 
