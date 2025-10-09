@@ -4,7 +4,7 @@
 - agregar módulo de sonido
 - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/
 - home / subpages
-
+- modularizar hydra-patches para tener archivos dinámicos a ejecutar desde hydra-patches/index.js -> [wip branch](https://github.com/macavilla/luchorus_chela/tree/wip-hydra-patches-modulares)
 
 ---
 
