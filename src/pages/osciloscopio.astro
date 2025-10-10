@@ -1,6 +1,7 @@
 ---
-import HydraCanvas from "../components/HydraCanvas";
+import HydraCanvasModule from "../components/HydraCanvasModule";
 import * as oscilloscope from "../lib/hydra-patches/osc.js";
+
 ---
 
 <html lang="es">
@@ -12,6 +13,6 @@ import * as oscilloscope from "../lib/hydra-patches/osc.js";
     <title>Boceto: oscilloscope</title>
   </head>
   <body>
-    <HydraCanvas client:only="react" patch={oscilloscope} />
+    <HydraCanvasModule client:only="react" patchName={"osc"} />
   </body>
 </html>
