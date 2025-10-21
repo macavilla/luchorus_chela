@@ -1,5 +1,5 @@
 ---
-import HydraCanvas from "../components/HydraCanvas";
+import OscilloscopePage from "../components/OscilloscopePage";
 ---
 
 <html lang="es">
@@ -8,14 +8,9 @@ import HydraCanvas from "../components/HydraCanvas";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Boceto: hydra + p5</title>
+    <title>un osciloscopio</title>
   </head>
   <body>
-    <nav>
-      <ul>
-        <li><a href="/kaleid">Kaleid</a></li>
-        <li><a href="/osciloscopio">osciloscopio</a></li>
-      </ul>
-    </nav>
+    <OscilloscopePage client:only="react" />
   </body>
 </html>

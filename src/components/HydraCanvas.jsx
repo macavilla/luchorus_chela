@@ -1,20 +1,13 @@
 import { useEffect, useRef } from "react";
+import { createHydra } from "../lib/hydra-init";
 
-import { initHydra } from "../lib/hydra-patches";
-
-export default function HydraCanvas() {
+export default function HydraCanvas({ patch }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    // ✅ Evita ejecutar en el servidor
-    if (typeof window === "undefined") return;
-
-    // 🩹 Polyfill para Hydra (usa 'global' internamente)
-    if (typeof global === "undefined") {
-      window.global = window;
-    }
-
     const canvas = canvasRef.current;
+
+    if (!canvas) return;
 
     // Ajusta tamaño al viewport
     const resizeCanvas = () => {
@@ -24,24 +17,26 @@ export default function HydraCanvas() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Inicializa Hydra
-    initHydra(canvas);
+    // inizializa hydra
+    const hydra = createHydra(canvas);
 
-    // Limpieza
+    // corro el patch
+    try {
+      if (typeof patch === "function") {
+        patch(hydra);
+      } else {
+        console.warn("⚠️ Patch inválido, usando fallback.");
+        hydra.synth.osc(10, 0.1, 0.8).kaleid(4).out();
+      }
+    } catch (err) {
+      console.error("Error ejecutando patch:", err);
+    }
+
+    // opcional: cleanup para liberar el canvas
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
+      hydra.synth.stop();
     };
-  }, []);
+  }, [patch]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        display: "block",
-        width: "100vw",
-        height: "100vh",
-        objectFit: "cover",
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} />;
 }
