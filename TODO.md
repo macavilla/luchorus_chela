@@ -1,5 +1,6 @@
 # TODO:
 
+- fix routing en ghpages
 - agregar módulo de sonido
 - agregar UI para botones de sonidos
 - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/
