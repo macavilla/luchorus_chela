@@ -4,6 +4,12 @@ export default function kaleid(hydra) {
     .rotate(0, 0.1)
     .posterize()
     .kaleid(18)
-    // .scale(1, 1, hydra.synth.width / hydra.synth.height)
+    .scroll(
+      () => -hydra.synth.mouse.x / hydra.synth.width,
+      () => -hydra.synth.mouse.y / hydra.synth.height,
+      0.1,
+      0.1
+    )
+    .scale(1, 1, hydra.synth.width / hydra.synth.height)
     .out();
 }
