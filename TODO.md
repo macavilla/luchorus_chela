@@ -2,12 +2,13 @@
 
 - agregar módulo de sonido -> centroide.js
 - agregar UI para botones de sonidos
-- implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/
+<!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
 ---
 
 # DONE:
 
+- agregar layout
 - fix routing en ghpages
 - modularizar hydra-patches para tener archivos dinámicos a ejecutar desde hydra-patches/index.js -> [wip branch](https://github.com/macavilla/luchorus_chela/tree/wip-hydra-patches-modulares)
 - home / subpages
