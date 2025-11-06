@@ -1,13 +1,17 @@
-# TODO:
+# WIP: 
+- fix resize canvas 
 
-- agregar módulo de sonido -> centroide.js
-- agregar UI para botones de sonidos
+
+# TODO:
+- fix useAudioInput.js
 <!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
 ---
 
 # DONE:
 
+- agregar módulo de sonido -> hook useAudioInput.js
+- agregar UI para botones de sonidos -> activa mic, toma sonido.
 - agregar layout
 - fix routing en ghpages
 - modularizar hydra-patches para tener archivos dinámicos a ejecutar desde hydra-patches/index.js -> [wip branch](https://github.com/macavilla/luchorus_chela/tree/wip-hydra-patches-modulares)
