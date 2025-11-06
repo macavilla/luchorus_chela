@@ -18,6 +18,8 @@ export default function HydraCanvas({ patch }) {
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      hydra.setResolution(window.innerWidth, window.innerHeight);
+
     };
     window.addEventListener("resize", resizeCanvas);
 
