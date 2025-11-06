@@ -1,8 +1,8 @@
 # WIP: 
-- fix resize canvas 
-
+- agregar p5.audio de lucho
 
 # TODO:
+- agregar sonido a todos los patches
 - fix useAudioInput.js
 <!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
@@ -10,6 +10,7 @@
 
 # DONE:
 
+- fix resize canvas 
 - agregar módulo de sonido -> hook useAudioInput.js
 - agregar UI para botones de sonidos -> activa mic, toma sonido.
 - agregar layout
