@@ -4,7 +4,7 @@
 # TODO:
 - agregar sonido a todos los patches
 - fix useAudioInput.js
-- 
+- refactor createHydra: https://chatgpt.com/share/690d2912-0aa8-8001-aa0d-a602644ba130
 <!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
 ---
