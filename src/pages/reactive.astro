@@ -1,0 +1,8 @@
+---
+import Main from "../layout/main-layout.astro";
+import ReactivePage from "../components/pages/ReactivePage";
+---
+
+<Main title="reactive">
+  <ReactivePage client:only="react" />
+</Main>

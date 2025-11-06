@@ -1,42 +1,72 @@
 import { useEffect, useRef } from "react";
 import { createHydra } from "../lib/hydra-init";
+import useAudioInput from "../hooks/useAudioInput";
 
 export default function HydraCanvas({ patch }) {
   const canvasRef = useRef(null);
+  const hydraRef = useRef(null);
+  const rafRef = useRef(null);
+  const { audioLevelRef, isReady, startMic } = useAudioInput();
 
   useEffect(() => {
     const canvas = canvasRef.current;
-
     if (!canvas) return;
 
-    // Ajusta tamaño al viewport
+    const hydra = createHydra(canvas);
+    hydraRef.current = hydra;
+
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // inizializa hydra
-    const hydra = createHydra(canvas);
-
-    // corro el patch
-    try {
+    const renderLoop = () => {
+      const level = audioLevelRef.current ?? 0;
       if (typeof patch === "function") {
-        patch(hydra);
-      } else {
-        console.warn("⚠️ Patch inválido, usando fallback.");
-        hydra.synth.osc(10, 0.1, 0.8).kaleid(4).out();
+        patch(hydra, { audioLevel: level });
       }
-    } catch (err) {
-      console.error("Error ejecutando patch:", err);
-    }
+      rafRef.current = requestAnimationFrame(renderLoop);
+    };
 
-    // opcional: cleanup para liberar el canvas
+    renderLoop();
+    resizeCanvas();
     return () => {
-      hydra.synth.stop();
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, [patch]);
 
-  return <canvas ref={canvasRef} />;
+  return (
+    <div style={{ position: "relative" }}>
+      <canvas
+        ref={canvasRef}
+        onClick={startMic}
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "block",
+          cursor: "pointer",
+        }}
+      />
+      {!isReady && (
+        <div
+          onClick={startMic}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "rgba(0,0,0,0.6)",
+            color: "white",
+            fontFamily: "monospace",
+            cursor: "pointer",
+          }}
+        >
+          🎙️ Click para activar el micrófono
+        </div>
+      )}
+    </div>
+  );
 }
