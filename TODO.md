@@ -4,6 +4,7 @@
 # TODO:
 - agregar sonido a todos los patches
 - fix useAudioInput.js
+- 
 <!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
 ---
