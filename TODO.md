@@ -1,9 +1,8 @@
 # WIP: 
-- agregar p5.audio de lucho
+- urgente: fix useAudioInput.js -> feedback loop ruidoso
 
 # TODO:
 - agregar sonido a todos los patches
-- fix useAudioInput.js
 - refactor createHydra: https://chatgpt.com/share/690d2912-0aa8-8001-aa0d-a602644ba130
 <!-- - implementar módulo de convolver: https://p5js.org/reference/p5.sound/p5.Convolver/ -->
 
@@ -11,6 +10,7 @@
 
 # DONE:
 
+- agregar p5.audio de lucho
 - fix resize canvas 
 - agregar módulo de sonido -> hook useAudioInput.js
 - agregar UI para botones de sonidos -> activa mic, toma sonido.
