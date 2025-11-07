@@ -6,7 +6,14 @@ export default function HydraCanvas({ patch }) {
   const canvasRef = useRef(null);
   const hydraRef = useRef(null);
   const rafRef = useRef(null);
-  const { audioLevelRef, isReady, startMic } = useAudioInput();
+  const { 
+    audioLevelRef,
+    centroidRef,
+    energyRef,
+    amplitudeRef,
+    isReady,
+    startMic
+  } = useAudioInput();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -25,8 +32,11 @@ export default function HydraCanvas({ patch }) {
 
     const renderLoop = () => {
       const level = audioLevelRef.current ?? 0;
+      const centroid = centroidRef.current ?? 0;
+      const energy = energyRef.current ?? 0;
+      const amplitude = amplitudeRef.current ?? 0;
       if (typeof patch === "function") {
-        patch(hydra, { audioLevel: level });
+        patch(hydra, { audioLevel: level, centroid, energy, amplitude });
       }
       rafRef.current = requestAnimationFrame(renderLoop);
     };

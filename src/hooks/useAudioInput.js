@@ -4,44 +4,84 @@ import "p5/lib/addons/p5.sound";
 
 export default function useAudioInput() {
   const audioLevelRef = useRef(0);
+  const centroidRef = useRef(0);
+  const energyRef = useRef(0);
+  const amplitudeRef = useRef(0);
   const micRef = useRef(null);
-  const [isReady, setIsReady] = useState(false);
+  const fftRef = useRef(null);
+  const filterRef = useRef(null);
   const rafRef = useRef(null);
   const pRef = useRef(null);
+  const [isReady, setIsReady] = useState(false);
 
   const startMic = async () => {
     if (isReady) return;
 
     try {
-      // Creamos (si no existe) la instancia de p5 una sola vez
       if (!pRef.current) {
         pRef.current = new p5(() => {});
       }
 
       const ctx = pRef.current.getAudioContext();
-
-      // Reactivamos el contexto de audio ANTES de crear el mic
       if (ctx.state === "suspended") {
         console.log("🎧 Reanudando contexto de audio...");
         await ctx.resume();
       }
 
-      // Ahora sí: inicializamos el micrófono
       const mic = new p5.AudioIn();
       await mic.start();
-
       micRef.current = mic;
+
+      const fft = new p5.FFT();
+      fft.setInput(mic);
+      fftRef.current = fft;
+
+      // High-pass filter a 100Hz
+      const filter = new p5.HighPass();
+      filter.freq(100);
+      filter.res(0);
+      mic.connect(filter);
+      filter.connect(fft);
+      filterRef.current = filter;
+
       setIsReady(true);
 
-      // Loop de lectura continua
-      const updateLevel = () => {
+      const updateAudioData = () => {
         if (mic.enabled) {
+          const spectrum = fft.analyze();
+
+          // Centroide espectral
+          let sum = 0;
+          let weightedSum = 0;
+          for (let i = 0; i < spectrum.length; i++) {
+            sum += spectrum[i];
+            weightedSum += i * spectrum[i];
+          }
+          const centroid = sum ? weightedSum / sum : 0;
+          centroidRef.current = centroid;
+
+          // Energía (centroid^2)
+          const energy = centroid * centroid;
+          energyRef.current = energy;
+
+          // Amplitud mapeada entre 0 y 127
+          const amplitude = pRef.current.map(
+            spectrum[Math.round(centroid)] || 0,
+            0,
+            255,
+            0,
+            127
+          );
+          amplitudeRef.current = amplitude;
+
+          // Nivel general del micrófono
           audioLevelRef.current = mic.getLevel();
         }
-        rafRef.current = requestAnimationFrame(updateLevel);
+
+        rafRef.current = requestAnimationFrame(updateAudioData);
       };
 
-      updateLevel();
+      updateAudioData();
     } catch (err) {
       console.error("🎙️ Error iniciando micrófono:", err);
     }
@@ -55,5 +95,12 @@ export default function useAudioInput() {
     };
   }, []);
 
-  return { audioLevelRef, isReady, startMic };
+  return {
+    audioLevelRef,
+    centroidRef,
+    energyRef,
+    amplitudeRef,
+    isReady,
+    startMic,
+  };
 }
