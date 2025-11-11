@@ -1,22 +1,27 @@
 let mic;
 let fft;
+let filter;
 let centroidValues = [];
 
 function setup() {
   createCanvas(800, 600);
   mic = new p5.AudioIn();
   mic.start();
+
+  // Insert a high-pass filter so the analyser reads the filtered signal
+  // without routing the raw mic stream directly to the master output.
+  filter = new p5.HighPass();
+  filter.freq(100);
+  filter.res(0);
+  mic.connect(filter);
+
   fft = new p5.FFT();
-  fft.setInput(mic);
+  fft.setInput(filter);
 }
 
 function draw() {
   background(0);
   let spectrum = fft.analyze();
-  let centroid = calculateSpectralCentroid(spectrum);
-  if (!isNaN(centroid)) {
-    centroidValues.push(centroid);
-  }
 
   // Dibujar el espectro; me hice quilombo JAJA
   noStroke();

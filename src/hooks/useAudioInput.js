@@ -22,6 +22,20 @@ export default function useAudioInput() {
         pRef.current = new p5(() => {});
       }
 
+      // Mute master output as a safety measure to avoid audible feedback
+      // during debugging. We expose setMasterVolume below so callers can
+      // restore audio when desired.
+      try {
+        if (typeof pRef.current.masterVolume === "function") {
+          pRef.current.masterVolume(0);
+        } else if (typeof p5?.masterVolume === "function") {
+          p5.masterVolume(0);
+        }
+      } catch (e) {
+        // Non-fatal if masterVolume isn't available
+        console.warn("Couldn't set masterVolume to 0:", e);
+      }
+
       const ctx = pRef.current.getAudioContext();
       if (ctx.state === "suspended") {
         console.log("🎧 Reanudando contexto de audio...");
@@ -91,6 +105,20 @@ export default function useAudioInput() {
     }
   };
 
+  const setMasterVolume = (v) => {
+    try {
+      if (pRef.current && typeof pRef.current.masterVolume === "function") {
+        pRef.current.masterVolume(v);
+      } else if (typeof p5?.masterVolume === "function") {
+        p5.masterVolume(v);
+      } else {
+        console.warn("masterVolume API not available to set to", v);
+      }
+    } catch (e) {
+      console.warn("Error setting masterVolume:", e);
+    }
+  };
+
   useEffect(() => {
     return () => {
       cancelAnimationFrame(rafRef.current);
@@ -113,5 +141,6 @@ export default function useAudioInput() {
     amplitudeRef,
     isReady,
     startMic,
+    setMasterVolume,
   };
 }

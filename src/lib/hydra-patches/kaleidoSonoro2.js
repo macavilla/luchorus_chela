@@ -16,6 +16,8 @@ hydra.synth.voronoi(sides, .2, ()=>time/4).colorama(()=>Math.sin(rotSpeed*.001))
   // .hue(()=>time * 0.05)
   
   // .hue(()=>time * 0.05)
+  .scale(.7, 1, ()=> hydra.synth.width/hydra.synth.height)
+
   .out();
 
 
