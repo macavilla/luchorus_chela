@@ -28,21 +28,25 @@ export default function useAudioInput() {
         await ctx.resume();
       }
 
-      const mic = new p5.AudioIn();
-      await mic.start();
-      micRef.current = mic;
+  const mic = new p5.AudioIn();
+  await mic.start();
+  micRef.current = mic;
 
-      const fft = new p5.FFT();
-      fft.setInput(mic);
-      fftRef.current = fft;
+  // High-pass filter a 100Hz
+  // We route the mic -> filter -> FFT (set FFT input to the filter)
+  // instead of connecting the filter to the FFT node via connect().
+  // This avoids accidentally routing the stream to the AudioContext
+  // destination which can produce audible feedback.
+  const filter = new p5.HighPass();
+  filter.freq(100);
+  filter.res(0);
+  mic.connect(filter);
+  filterRef.current = filter;
 
-      // High-pass filter a 100Hz
-      const filter = new p5.HighPass();
-      filter.freq(100);
-      filter.res(0);
-      mic.connect(filter);
-      filter.connect(fft);
-      filterRef.current = filter;
+  const fft = new p5.FFT();
+  // set FFT input to the filtered signal (not directly to the mic)
+  fft.setInput(filter);
+  fftRef.current = fft;
 
       setIsReady(true);
 
@@ -90,7 +94,14 @@ export default function useAudioInput() {
   useEffect(() => {
     return () => {
       cancelAnimationFrame(rafRef.current);
-      micRef.current?.stop?.();
+      // Stop and disconnect audio nodes to ensure no audio routing remains
+      try {
+        micRef.current?.stop?.();
+        micRef.current?.disconnect?.();
+      } catch (e) {}
+      try {
+        filterRef.current?.disconnect?.();
+      } catch (e) {}
       pRef.current?.remove?.();
     };
   }, []);
