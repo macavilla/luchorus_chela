@@ -1,21 +1,15 @@
 export default function kaleidoSonoro(hydra, { audioLevel, centroid, energy, amplitude }) {
-
-// Parámetros dinámicos
-const sides = Math.round(2 + Math.min(centroid / 10, 8)); // entre 2 y 10
+const sides = Math.round(2 + Math.min(centroid / 10, 8)); 
 const zoom = 1 + audioLevel * 2;
 const rotSpeed = energy /2;
 
-// Código Hydra
 hydra.synth.voronoi(sides, .2, ()=>time/4).colorama(()=>Math.sin(rotSpeed*.001)).posterize(5)
   .kaleid(sides)
   // .scale(zoom)
   .rotate(rotSpeed*.005)
-  .rotate(rotSpeed*.005)
   .modulate(hydra.synth.shape(sides).scale(zoom), audioLevel * 0.2)
-  
-  // .hue(()=>time * 0.05)
-  
-  // .hue(()=>time * 0.05)
+  .pixelate(100, 100)
+  .scale(.7, 1, ()=> hydra.synth.width/hydra.synth.height)
   .out();
 
 
