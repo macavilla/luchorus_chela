@@ -22,9 +22,7 @@ export default function useAudioInput() {
         pRef.current = new p5(() => {});
       }
 
-      // Mute master output as a safety measure to avoid audible feedback
-      // during debugging. We expose setMasterVolume below so callers can
-      // restore audio when desired.
+      // Muteo masterVolume output para evitar feedback loop
       try {
         if (typeof pRef.current.masterVolume === "function") {
           pRef.current.masterVolume(0);
@@ -32,7 +30,6 @@ export default function useAudioInput() {
           p5.masterVolume(0);
         }
       } catch (e) {
-        // Non-fatal if masterVolume isn't available
         console.warn("Couldn't set masterVolume to 0:", e);
       }
 
@@ -47,10 +44,6 @@ export default function useAudioInput() {
   micRef.current = mic;
 
   // High-pass filter a 100Hz
-  // We route the mic -> filter -> FFT (set FFT input to the filter)
-  // instead of connecting the filter to the FFT node via connect().
-  // This avoids accidentally routing the stream to the AudioContext
-  // destination which can produce audible feedback.
   const filter = new p5.HighPass();
   filter.freq(100);
   filter.res(0);
@@ -58,7 +51,7 @@ export default function useAudioInput() {
   filterRef.current = filter;
 
   const fft = new p5.FFT();
-  // set FFT input to the filtered signal (not directly to the mic)
+  // seteo FFT input a la señal filtrada y no directo al mic
   fft.setInput(filter);
   fftRef.current = fft;
 
@@ -122,7 +115,6 @@ export default function useAudioInput() {
   useEffect(() => {
     return () => {
       cancelAnimationFrame(rafRef.current);
-      // Stop and disconnect audio nodes to ensure no audio routing remains
       try {
         micRef.current?.stop?.();
         micRef.current?.disconnect?.();
