@@ -1,5 +1,4 @@
 # WIP: 
-- urgente: fix useAudioInput.js -> feedback loop ruidoso
 
 # TODO:
 - agregar sonido a todos los patches
@@ -10,6 +9,7 @@
 
 # DONE:
 
+- urgente: fix useAudioInput.js -> feedback loop ruidoso
 - agregar p5.audio de lucho
 - fix resize canvas 
 - agregar módulo de sonido -> hook useAudioInput.js
